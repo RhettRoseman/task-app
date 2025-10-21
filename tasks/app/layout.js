@@ -19,10 +19,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased` }
-         wotdisconnected="true"
+         wotdisconnected="true" // DO NOT REMOVE IF REMOVED ERROR POPS UP
       >
+     
         {children}
       </body>
     </html>

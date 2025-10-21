@@ -1,6 +1,7 @@
 'use client'
 import react from "react";
 import { useState, useEffect } from "react";
+import Footer from './footer';
 
 export default function Tasks() {
     const [tasks, setTasks] = useState([]) //state to hold all tasks
@@ -40,7 +41,7 @@ export default function Tasks() {
     };
     return (
         <div>
-            <h2 className='text-2xl font-bold mb-4'>Tasks</h2>
+            <h2 className='text-2xl font-bold text-center mb-2'>Tasks</h2>
             <form className='flex mb-4'>
                 {/* Input + button wrapper */}
                 <input type='text'
@@ -69,7 +70,9 @@ export default function Tasks() {
             ))}
                 
             </ul>
-
+            <div>
+                <Footer/>
+            </div>
         </div>
     )
 } 
