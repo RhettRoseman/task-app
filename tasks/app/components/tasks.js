@@ -1,3 +1,4 @@
+// FRONTEND ONLY VERSION NO DATABASE CONNECTION ONLY LOCALSTROAGE
 'use client'
 import react from "react";
 import { useState, useEffect } from "react";
