@@ -3,7 +3,7 @@
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
@@ -12,7 +12,6 @@ from typing import List
 
 # Database setup
 DATABASE_URL = "postgresql://jroseman3:postgres@localhost:5434/taskmanager"
-# Change 'postgres:postgres' to your username:password if different
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -25,6 +24,7 @@ class TaskDB(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    completed = Column(Boolean, default=False)
 
 # Create tables
 Base.metadata.create_all(bind=engine)
@@ -37,6 +37,7 @@ class Task(BaseModel):
     id: int
     content: str
     created_at: datetime
+    completed: bool  # Added
     
     class Config:
         from_attributes = True
@@ -44,7 +45,7 @@ class Task(BaseModel):
 # FastAPI app
 app = FastAPI(title="Task Manager API")
 
-# CORS - allows your Next.js frontend to connect
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -94,6 +95,17 @@ def update_task(task_id: int, task: TaskCreate, db: Session = Depends(get_db)):
     if not db_task:
         raise HTTPException(status_code=404, detail="Task not found")
     db_task.content = task.content
+    db.commit()
+    db.refresh(db_task)
+    return db_task
+
+# New route to toggle completion
+@app.patch("/tasks/{task_id}/toggle", response_model=Task)
+def toggle_task(task_id: int, db: Session = Depends(get_db)):
+    db_task = db.query(TaskDB).filter(TaskDB.id == task_id).first()
+    if not db_task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    db_task.completed = not db_task.completed
     db.commit()
     db.refresh(db_task)
     return db_task
