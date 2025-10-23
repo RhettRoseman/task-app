@@ -1,9 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). 
 ## Languages 
-  # javascript (next.js) 
-  # python3 
+  ### javascript (next.js) 
+  ### python3 
 ## Database 
-  # postgressql
+  ### postgressql
   
 ## Getting Started
 
